@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday</title>
+
+  <!-- Montserrat font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --accent-yellow: #ffd659;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Montserrat", system-ui, sans-serif;
+      color: #ffffff;
+      background: linear-gradient(to bottom right, #7ec9ff, #bfe8ff);
+      background-attachment: fixed;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.55);
+      padding: 24px 32px;
+      border-radius: 18px;
+      max-width: 720px;
+      width: min(90%, 720px);
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(2px);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-yellow);
+      font-weight: 900;
+    }
+
+    p {
+      margin: 0 0 14px;
+      line-height: 1.5;
+      font-size: 1.05rem;
+      font-weight: 400;
+    }
+
+    strong {
+      color: var(--accent-yellow);
+      font-weight: 700;
+    }
+
+    button {
+      font-family: "Montserrat", system-ui, sans-serif;
+      font-size: 1.05rem;
+      padding: 0.6em 1.6em;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: var(--accent-yellow);
+      color: #2f2710;
+      margin: 6px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.5);
+      background: #ffe57c;
+    }
+
+    pre {
+      text-align: left;
+      display: inline-block;
+      margin: 12px 0;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.35);
+      font-family: "Courier New", monospace;
+      font-size: 0.95rem;
+      letter-spacing: 0.1em;
+    }
+
+    input[type="text"] {
+      font-family: "Montserrat", system-ui, sans-serif;
+      padding: 0.45em 0.75em;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.6);
+      background: rgba(0,0,0,0.35);
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"]::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
+    a.button-link {
+      display: inline-block;
+      padding: 0.6em 1.6em;
+      font-weight: 700;
+      color:#2f2710;
+      background: var(--accent-yellow);
+      text-decoration: none;
+      border-radius: 999px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+      font-family: "Montserrat", system-ui, sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.05em;
+    }
+
+    ol {
+      text-align: left;
+      margin: 0 auto 12px;
+      padding-left: 1.4rem;
+      max-width: 520px;
+      font-size: 0.98rem;
+    }
+
+    label {
+      font-size: 0.95rem;
+    }
+
+    /* Crossword inputs */
+    table {
+      border-collapse: collapse;
+    }
+
+    td {
+      padding: 2px;
+    }
+
+    .cw {
+      width: 40px;
+      height: 40px;
+      text-transform: uppercase;
+      font-size: 1.4rem;
+      text-align: center;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.6);
+      background: rgba(0,0,0,0.4);
+      color: white;
+      box-sizing: border-box;
+    }
+
+    .block {
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      font-size: 1.4rem;
+      background: rgba(255,255,255,0.18);
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .correct-cell {
+      background: rgba(46, 204, 113, 0.6); /* green-ish */
+      border-color: rgba(255,255,255,0.9);
+    }
+
+    .wrong-cell {
+      background: rgba(231, 76, 60, 0.7); /* red-ish */
+      border-color: rgba(255,255,255,0.9);
+    }
+
+    /* Sparkles */
+    .sparkle {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ffd659;
+      pointer-events: none;
+      animation: sparkleFloat 1.2s ease-out forwards;
+      z-index: 9999;
+    }
+
+    @keyframes sparkleFloat {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-40px) scale(0.6);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="overlay">
+
+    <!-- STEP 1: cups puzzle -->
+    <section id="step1">
+      <h1>From Tree to Shining Sea</h1>
+      <p>Your first clue is hidden in one of these cups...</p>
+
+      <div>
+        <button onclick="wrongCup()">☕ Cup 1</button>
+        <button onclick="goToStep2()">☕ Cup 2</button>
+        <button onclick="wrongCup()">☕ Cup 3</button>
+      </div>
+
+      <p id="message"></p>
+    </section>
+
+    <!-- STEP 2: word search -->
+    <section id="step2" style="display:none;">
+      <h1>Word Search</h1>
+      <p><strong>Can you find the magic word?</strong><br>There are lies to distract you.</p>
+
+      <pre>
+F R I S B E E G P B
+R O A D T R I P H I
+A V Q L M N O K J R
+C D E F G H I U V T
+M N O P Q R S L W H
+W T Y U I A B R F D
+H A P P Y M L S C A
+J K L Q V W R T G Y
+      </pre>
+
+      <input type="text" id="wordInput" placeholder="">
+      <br>
+      <button onclick="checkWord()">I found it!</button>
+
+      <p id="wordMessage"></p>
+    </section>
+
+    <!-- STEP 3: almost there -->
+    <section id="step3" style="display:none;">
+      <h1>Almost There…</h1>
+      <p>You solved the crossword — your adventure continues.</p>
+      <button onclick="goToStep4()">Click here →</button>
+    </section>
+
+    <!-- STEP 4: crossword (blank grid) -->
+    <section id="step4" style="display:none;">
+      <h1>Warmer…</h1>
+      <p>Mini crossword time. Fill in <strong>all the boxes</strong>. Blocks (■) stay blank.</p>
+
+      <table style="margin: 0 auto; font-size: 1.3rem;">
+        <!-- Row 1 -->
+        <tr>
+          <td><input maxlength="1" id="r1c1" class="cw"></td>
+          <td><input maxlength="1" id="r1c2" class="cw"></td>
+          <td><input maxlength="1" id="r1c3" class="cw"></td>
+          <td><input maxlength="1" id="r1c4" class="cw"></td>
+          <td><input maxlength="1" id="r1c5" class="cw"></td>
+        </tr>
+        <!-- Row 2 -->
+        <tr>
+          <td><input maxlength="1" id="r2c1" class="cw"></td>
+          <td class="block">■</td>
+          <td><input maxlength="1" id="r2c3" class="cw"></td>
+          <td class="block">■</td>
+          <td><input maxlength="1" id="r2c5" class="cw"></td>
+        </tr>
+        <!-- Row 3 -->
+        <tr>
+          <td><input maxlength="1" id="r3c1" class="cw"></td>
+          <td><input maxlength="1" id="r3c2" class="cw"></td>
+          <td><input maxlength="1" id="r3c3" class="cw"></td>
+          <td><input maxlength="1" id="r3c4" class="cw"></td>
+          <td><input maxlength="1" id="r3c5" class="cw"></td>
+        </tr>
+        <!-- Row 4 -->
+        <tr>
+          <td><input maxlength="1" id="r4c1" class="cw"></td>
+          <td class="block">■</td>
+          <td><input maxlength="1" id="r4c3" class="cw"></td>
+          <td class="block">■</td>
+          <td><input maxlength="1" id="r4c5" class="cw"></td>
+        </tr>
+        <!-- Row 5 -->
+        <tr>
+          <td><input maxlength="1" id="r5c1" class="cw"></td>
+          <td><input maxlength="1" id="r5c2" class="cw"></td>
+          <td><input maxlength="1" id="r5c3" class="cw"></td>
+          <td><input maxlength="1" id="r5c4" class="cw"></td>
+          <td><input maxlength="1" id="r5c5" class="cw"></td>
+        </tr>
+      </table>
+
+      <p><strong>Across clues:</strong></p>
+      <ol>
+        <li><strong>1A (5)</strong> – Giants we visited in the redwoods</li>
+        <li><strong>3A (5)</strong> – Our nightly dessert while camping</li>
+        <li><strong>5A (5)</strong> – A biome we like to call home</li>
+      </ol>
+
+      <p><strong>Down clues:</strong></p>
+      <ol>
+        <li><strong>1D (5)</strong> – UK grocer we frequented at Seven Sisters</li>
+        <li><strong>3D (5)</strong> – Fortnite move when you win a battle royale or eliminate a player</li>
+        <li><strong>5D (5)</strong> – Oily shine you get after too many days camping</li>
+      </ol>
+
+      <button onclick="checkCrossword()">Submit crossword</button>
+      <p id="crosswordMessage"></p>
+    </section>
+
+    <!-- STEP 5: final video -->
+    <section id="step5" style="display:none;">
+      <h1>Your Birthday Video 🎬</h1>
+      <p>The journey ends here — enjoy your gift.</p>
+
+      <a class="button-link"
+         href="https://youtu.be/3Otw8puGJXw?si=W3OLdzLAUE8M9-2k"
+         target="_blank">
+        Watch the video 💛
+      </a>
+    </section>
+
+  </div>
+
+  <script>
+    function wrongCup() {
+      document.getElementById("message").textContent = "Nope! Try again ☺️";
+    }
+
+    function goToStep2() {
+      document.getElementById("step1").style.display = "none";
+      document.getElementById("step2").style.display = "block";
+    }
+
+    function checkWord() {
+      var input = document.getElementById("wordInput").value.trim().toLowerCase();
+      var msg = document.getElementById("wordMessage");
+
+      if (input === "birthday") {
+        msg.textContent = "Nice! You found it 🎉";
+        goToStep3();
+      } else {
+        msg.textContent = "Not quite, look again 😉";
+      }
+    }
+
+    function goToStep3() {
+      document.getElementById("step2").style.display = "none";
+      document.getElementById("step3").style.display = "block";
+    }
+
+    function goToStep4() {
+      document.getElementById("step3").style.display = "none";
+      document.getElementById("step4").style.display = "block";
+    }
+
+    function goToStep5() {
+      document.getElementById("step4").style.display = "none";
+      document.getElementById("step5").style.display = "block";
+    }
+
+    // Sparkle effect
+    function triggerSparkles() {
+      for (let i = 0; i < 30; i++) {
+        const s = document.createElement("span");
+        s.className = "sparkle";
+        s.style.left = Math.random() * 100 + "vw";
+        s.style.top = (40 + Math.random() * 40) + "vh";
+        s.style.animationDelay = (Math.random() * 0.5) + "s";
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 1500);
+      }
+    }
+
+    // Crossword checking with per-cell highlights
+    function checkCrossword() {
+      const msg = document.getElementById("crosswordMessage");
+
+      // Solution key for every non-block cell
+      const solution = {
+        "r1c1": "T", "r1c2": "R", "r1c3": "E", "r1c4": "E", "r1c5": "S",
+        "r2c1": "E",               "r2c3": "M",               "r2c5": "H",
+        "r3c1": "S", "r3c2": "M", "r3c3": "O", "r3c4": "R", "r3c5": "E",
+        "r4c1": "C",               "r4c3": "T",               "r4c5": "E",
+        "r5c1": "O", "r5c2": "C", "r5c3": "E", "r5c4": "A", "r5c5": "N"
+      };
+
+      let allCorrect = true;
+
+      // Reset + compare each fillable cell
+      for (let row = 1; row <= 5; row++) {
+        for (let col = 1; col <= 5; col++) {
+          const id = `r${row}c${col}`;
+          const expected = solution[id];
+          const inputEl = document.getElementById(id);
+
+          if (!inputEl) continue; // skip blocks
+
+          const value = inputEl.value.toUpperCase();
+
+          inputEl.classList.remove("correct-cell", "wrong-cell");
+
+          if (!expected) {
+            // this was actually a block cell, but we used <td class="block">
+            continue;
+          }
+
+          if (!value) {
+            // empty: not correct yet, but don't highlight red
+            allCorrect = false;
+            continue;
+          }
+
+          if (value === expected) {
+            inputEl.classList.add("correct-cell");
+          } else {
+            inputEl.classList.add("wrong-cell");
+            allCorrect = false;
+          }
+        }
+      }
+
+      // Build down answers for stricter check, just in case
+      const d1 = (
+        document.getElementById("r1c1").value +
+        document.getElementById("r2c1").value +
+        document.getElementById("r3c1").value +
+        document.getElementById("r4c1").value +
+        document.getElementById("r5c1").value
+      ).toUpperCase();
+
+      const d3 = (
+        document.getElementById("r1c3").value +
+        document.getElementById("r2c3").value +
+        document.getElementById("r3c3").value +
+        document.getElementById("r4c3").value +
+        document.getElementById("r5c3").value
+      ).toUpperCase();
+
+      const d5 = (
+        document.getElementById("r1c5").value +
+        document.getElementById("r2c5").value +
+        document.getElementById("r3c5").value +
+        document.getElementById("r4c5").value +
+        document.getElementById("r5c5").value
+      ).toUpperCase();
+
+      const downsCorrect = (d1 === "TESCO" && d3 === "EMOTE" && d5 === "SHEEN");
+
+      if (allCorrect && downsCorrect) {
+        msg.textContent = "Perfect! You crossword demon 😈✨";
+        triggerSparkles();
+        // tiny delay so she can see the sparkle, then move on
+        setTimeout(goToStep5, 900);
+      } else {
+        msg.textContent = "Something's not quite right... check your letters again 👀";
+      }
+    }
+  </script>
+</body>
+</html>
